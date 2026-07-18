@@ -7,8 +7,8 @@ resource "aws_vpc" "devlopment_vpc" {
 
 
   tags = {
-    name = var.vpc_name
-    env  = var.env_name
+    Name = var.vpc_name
+    Env  = var.env_name
   }
 
 }
@@ -18,8 +18,8 @@ resource "aws_internet_gateway" "devlopment_igw" {
   vpc_id = aws_vpc.devlopment_vpc.id
 
   tags = {
-    name = "${var.env_name}-igw"
-    env  = var.env_name
+    Name = "${var.env_name}-igw"
+    Env  = var.env_name
   }
 
 }
@@ -34,8 +34,8 @@ resource "aws_subnet" "public_subnet" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    name = "${var.env_name}-public-subnet-${count.index}"
-    env  = var.env_name
+    Name = "${var.env_name}-public-subnet-${count.index}"
+    Env  = var.env_name
   }
 }
 
@@ -49,8 +49,8 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    name = "${var.env_name}-private-subnet-${count.index}"
-    env  = var.env_name
+    Name = "${var.env_name}-private-subnet-${count.index}"
+    Env  = var.env_name
   }
 }
 
@@ -65,8 +65,8 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    name = "${var.env_name}-public-route-table"
-    env  = var.env_name
+    Name = "${var.env_name}-public-route-table"
+    Env  = var.env_name
   }
 }
 
@@ -77,8 +77,8 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.devlopment_vpc.id
 
   tags = {
-    name = "${var.env_name}-private-route-table"
-    env  = var.env_name
+    Name = "${var.env_name}-private-route-table"
+    Env  = var.env_name
   }
 
 }
@@ -105,8 +105,8 @@ resource "aws_cloudwatch_log_group" "vpc_flow_log" {
   retention_in_days = var.flow_log_retention_in_days
 
   tags = {
-    name = "${var.env_name}-vpc-flow-log-group"
-    env  = var.env_name
+    Name = "${var.env_name}-vpc-flow-log-group"
+    Env  = var.env_name
   }
 }
 
@@ -128,8 +128,8 @@ resource "aws_iam_role" "vpc_flow_log" {
   })
 
   tags = {
-    name = "${var.env_name}-vpc-flow-log-role"
-    env  = var.env_name
+    Name = "${var.env_name}-vpc-flow-log-role"
+    Env  = var.env_name
   }
 }
 
@@ -163,7 +163,7 @@ resource "aws_flow_log" "devlopment_vpc" {
   iam_role_arn         = aws_iam_role.vpc_flow_log.arn
 
   tags = {
-    name = "${var.env_name}-vpc-flow-log"
-    env  = var.env_name
+    Name = "${var.env_name}-vpc-flow-log"
+    Env  = var.env_name
   }
 }
