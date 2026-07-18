@@ -10,3 +10,7 @@ output "private_subnet_ids" {
   value = module.aws_vpc.private_subnet_ids
 }
 
+output "bastion_sg" {
+  value = module.aws_vpc.bastion_sg
+
+}

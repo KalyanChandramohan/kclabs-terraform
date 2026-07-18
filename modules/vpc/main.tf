@@ -7,7 +7,7 @@ resource "aws_vpc" "devlopment_vpc" {
 
 
   tags = {
-    Name = var.vpc_name
+    Name = "${var.vpc_name}-vpc"
     Env  = var.env_name
   }
 
@@ -29,9 +29,10 @@ resource "aws_internet_gateway" "devlopment_igw" {
 resource "aws_subnet" "public_subnet" {
   count = 2
 
-  vpc_id            = aws_vpc.devlopment_vpc.id
-  cidr_block        = var.public_subnet_cidr[count.index]
-  availability_zone = var.availability_zones[count.index]
+  vpc_id                  = aws_vpc.devlopment_vpc.id
+  cidr_block              = var.public_subnet_cidr[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "${var.env_name}-public-subnet-${count.index}"
@@ -164,6 +165,43 @@ resource "aws_flow_log" "devlopment_vpc" {
 
   tags = {
     Name = "${var.env_name}-vpc-flow-log"
+    Env  = var.env_name
+  }
+}
+
+
+// Security group allowing SSH (22) and HTTP (80) from anywhere
+resource "aws_security_group" "bastion_sg" {
+  name        = "bastion-sg"
+  description = "Allow SSH and HTTP inbound traffic"
+  vpc_id      = aws_vpc.devlopment_vpc.id
+
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.env_name}-bastion-sg"
     Env  = var.env_name
   }
 }
