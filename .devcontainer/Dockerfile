@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/base:bookworm
 
 # Versions (override at build time with --build-arg)
-ARG TERRAFORM_VERSION=1.9.8
+ARG TERRAFORM_VERSION=1.10.0
 ARG TFLINT_VERSION=0.53.0
 # TARGETARCH is auto-populated by BuildKit with the real target arch
 # (amd64 / arm64) — do NOT give it a default, or the wrong arch gets used.
