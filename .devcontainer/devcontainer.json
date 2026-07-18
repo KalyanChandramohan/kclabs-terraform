@@ -25,11 +25,12 @@
     }
   },
   "mounts": [
-    "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,consistency=cached"
   ],
   "remoteEnv": {
     "AWS_REGION": "ap-south-2"
   },
-  "postCreateCommand": "python --version && aws --version && terraform version && tflint --version && tfsec --version",
+  "postCreateCommand": "python --version && aws --version && terraform version && tflint --version && tfsec --version && (ssh -o StrictHostKeyChecking=accept-new -T git@github.com 2>&1 | grep -o 'Hi [^!]*' || echo 'ssh github: auth check failed')",
   "remoteUser": "vscode"
 }
