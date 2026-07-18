@@ -5,6 +5,7 @@ resource "aws_vpc" "devlopment_vpc" {
   enable_dns_hostnames = "true"
   enable_dns_support   = "true"
 
+
   tags = {
     name = var.vpc_name
     env  = var.env_name
@@ -96,4 +97,73 @@ resource "aws_route_table_association" "private_route_table_association" {
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_route_table.id
 
+}
+
+# Destination for VPC flow logs.
+resource "aws_cloudwatch_log_group" "vpc_flow_log" {
+  name              = "/vpc/${var.env_name}-flow-logs"
+  retention_in_days = var.flow_log_retention_in_days
+
+  tags = {
+    name = "${var.env_name}-vpc-flow-log-group"
+    env  = var.env_name
+  }
+}
+
+# Lets the VPC flow log service write into the log group above.
+resource "aws_iam_role" "vpc_flow_log" {
+  name = "${var.env_name}-vpc-flow-log-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "vpc-flow-logs.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = {
+    name = "${var.env_name}-vpc-flow-log-role"
+    env  = var.env_name
+  }
+}
+
+resource "aws_iam_role_policy" "vpc_flow_log" {
+  name = "${var.env_name}-vpc-flow-log-policy"
+  role = aws_iam_role.vpc_flow_log.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = "${aws_cloudwatch_log_group.vpc_flow_log.arn}:*"
+      }
+    ]
+  })
+}
+
+resource "aws_flow_log" "devlopment_vpc" {
+  vpc_id               = aws_vpc.devlopment_vpc.id
+  traffic_type         = var.flow_log_traffic_type
+  log_destination_type = "cloud-watch-logs"
+  log_destination      = aws_cloudwatch_log_group.vpc_flow_log.arn
+  iam_role_arn         = aws_iam_role.vpc_flow_log.arn
+
+  tags = {
+    name = "${var.env_name}-vpc-flow-log"
+    env  = var.env_name
+  }
 }

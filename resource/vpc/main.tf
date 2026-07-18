@@ -8,4 +8,7 @@ module "aws_vpc" {
   public_subnet_cidr  = var.public_subnet_cidr
   private_subnet_cidr = var.private_subnet_cidr
   availability_zones  = var.availability_zones
+
+  flow_log_retention_in_days = var.flow_log_retention_in_days
+  flow_log_traffic_type      = var.flow_log_traffic_type
 }

@@ -42,3 +42,15 @@ variable "availability_zones" {
   description = "Availability zones to spread subnets across, one per count.index."
   type        = list(string)
 }
+
+variable "flow_log_retention_in_days" {
+  description = "Number of days to retain VPC flow logs in CloudWatch."
+  type        = number
+  default     = 14
+}
+
+variable "flow_log_traffic_type" {
+  description = "Type of traffic to capture in VPC flow logs (ACCEPT, REJECT, or ALL)."
+  type        = string
+  default     = "ALL"
+}
