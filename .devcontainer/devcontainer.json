@@ -1,0 +1,35 @@
+{
+  "name": "kclabs-terraform",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform",
+        "tfsec.tfsec",
+        "amazonwebservices.aws-toolkit-vscode",
+        "anthropic.claude-code"
+      ],
+      "settings": {
+        "terraform.languageServer.enable": true,
+        "[terraform]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true
+        },
+        "[terraform-vars]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
+  ],
+  "remoteEnv": {
+    "AWS_REGION": "ap-south-2"
+  },
+  "postCreateCommand": "python --version && aws --version && terraform version && tflint --version && tfsec --version",
+  "remoteUser": "vscode"
+}
