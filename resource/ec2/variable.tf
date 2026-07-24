@@ -18,7 +18,7 @@ variable "vault_address" {
 variable "vault_key_secret_path" {
   description = "KV v2 secret path (relative to the mount) holding the key_name field."
   type        = string
-  default     = "ssh/key-name"
+  default     = "ec2_key"
 }
 variable "env_name" {
   description = "The name of the environment."
