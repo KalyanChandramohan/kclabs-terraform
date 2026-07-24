@@ -10,12 +10,16 @@ variable "instance_type" {
 
 }
 
-variable "key_name" {
-  description = "The name of the key pair to use for the instance."
+variable "vault_address" {
+  description = "Address of the Vault server holding the EC2 key pair metadata."
   type        = string
-
 }
 
+variable "vault_key_secret_path" {
+  description = "KV v2 secret path (relative to the mount) holding the key_name field."
+  type        = string
+  default     = "ssh/key-name"
+}
 variable "env_name" {
   description = "The name of the environment."
   type        = string

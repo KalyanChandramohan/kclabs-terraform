@@ -30,3 +30,9 @@ variable "env_name" {
   type        = string
 
 }
+
+variable "user_data" {
+  description = "User data script to run on instance launch."
+  type        = string
+  default     = null
+}

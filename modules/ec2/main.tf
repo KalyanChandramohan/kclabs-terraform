@@ -4,6 +4,7 @@ resource "aws_instance" "public_instance" {
   subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnet_ids[0]
   key_name               = var.key_name
   vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.bastion_sg]
+  user_data              = var.user_data
 
   tags = {
     Name = "${var.env_name}-public-instance"
